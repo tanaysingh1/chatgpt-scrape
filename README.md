@@ -13,9 +13,11 @@ A modular web scraper for ChatGPT built with Puppeteer, featuring robust logging
 
 ```
 thomas-gpt-scrape/
-├── index.js                          # Main orchestrator
+├── index_local.js                          # Main orchestrator( local)
+├── index_remote.js                         # Main orchestrator( remote)
 ├── modules/
-│   ├── browserSetup.js               # Browser initialization and navigation
+│   ├── browserbaseSetup.js           # Browser initialization( remote on browserbase) and navigation
+│   ├── browserSetup.js               # Browser initialization( ) and navigation
 │   ├── querySubmission.js            # Search button clicking and query typing
 │   └── responseExtraction.js         # Response monitoring and text extraction
 ├── utils/
@@ -32,26 +34,26 @@ npm install
 
 ## Usage
 
+You can choose to run either the local or BrowserBase version, but unfrotunately ChatGPT search is blocked for BrowserBase servers and they give very little control on stealth options, so it won't search the web.
+
+UPDATE: ChatGPT has blocked all BrowserBase traffic completely, so it can load the site but ChatGPT won't respond.
+
 Run the scraper with a query:
 
 ```bash
-node index.js "Your question here"
-```
-
-Example:
-
-```bash
-node index.js "How are you doing today?"
+node index_local.js "Your question here"
 ```
 
 ## How It Works
 
 1. **Browser Setup** (`modules/browserSetup.js`)
+
    - Launches Puppeteer browser in non-headless mode
    - Configures anti-detection measures (user agent, headers, navigator properties)
    - Navigates to ChatGPT with human-like delays
 
 2. **Query Submission** (`modules/querySubmission.js`)
+
    - Clicks the search/composer button (`data-testid="composer-button-search"`)
    - Types the query into the prompt textarea (`id="prompt-textarea"`)
    - Clicks the submit button (`data-testid="composer-submit-button"`)
@@ -92,6 +94,7 @@ chatgpt_response_{sanitized_query}_{timestamp}.txt
 ```
 
 Each file includes:
+
 - Original query
 - Timestamp
 - Full response text
@@ -109,6 +112,7 @@ You can modify the following in the code:
 ## Error Handling
 
 The scraper includes comprehensive error handling:
+
 - Each module logs errors with stack traces
 - Failed operations throw errors up to the main orchestrator
 - Browser is properly closed even if errors occur
